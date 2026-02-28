@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MILO | App Home</title>
+    <link rel="stylesheet" href="/app.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <h1>MILO App</h1>
+        <div class="user-chip">
+          <div id="user-name">Staff User</div>
+          <small id="user-role">role</small>
+        </div>
+        <nav class="menu">
+          <a class="active" href="/app-home.html">Dashboard</a>
+          <a href="#">Calendar</a>
+          <a href="#">Reservations</a>
+          <a href="#">Customers & Pets</a>
+          <a href="#">Daycare</a>
+          <a href="#">Grooming</a>
+          <a href="#">Billing</a>
+          <a href="#">Inventory</a>
+          <a href="#">Reports</a>
+        </nav>
+      </aside>
+
+      <main class="content">
+        <div class="topbar-row">
+          <div>
+            <h2>Operations Home</h2>
+            <p id="today-label">Today</p>
+          </div>
+          <button id="logout-btn" class="btn btn-outline">Log Out</button>
+        </div>
+
+        <section class="kpi-grid">
+          <article class="card kpi">
+            <small>Boarding Occupancy</small>
+            <div class="value" id="kpi-occupancy">0%</div>
+          </article>
+          <article class="card kpi">
+            <small>Dogs On Site</small>
+            <div class="value" id="kpi-onsite">0</div>
+          </article>
+          <article class="card kpi">
+            <small>Daycare Check-ins</small>
+            <div class="value" id="kpi-daycare">0</div>
+          </article>
+          <article class="card kpi">
+            <small>Grooming Appointments</small>
+            <div class="value" id="kpi-grooming">0</div>
+          </article>
+        </section>
+
+        <section class="dashboard-grid">
+          <article class="card panel">
+            <h3>Arrivals & Departures</h3>
+            <div id="arrivals-list" class="list"></div>
+          </article>
+
+          <article class="card panel">
+            <h3>Quick Actions</h3>
+            <div class="action-row">
+              <button class="btn btn-primary" data-action="New Reservation">New Reservation</button>
+              <button class="btn btn-primary" data-action="Check In Dog">Check In Dog</button>
+              <button class="btn btn-outline" data-action="Schedule Grooming">Schedule Grooming</button>
+              <button class="btn btn-outline" data-action="Open Billing">Open Billing</button>
+            </div>
+            <pre id="action-output"></pre>
+          </article>
+        </section>
+
+        <section class="dashboard-grid">
+          <article class="card panel">
+            <h3>Daycare Groups</h3>
+            <div id="daycare-list" class="list"></div>
+          </article>
+
+          <article class="card panel">
+            <h3>Grooming Queue</h3>
+            <div id="grooming-list" class="list"></div>
+          </article>
+        </section>
+      </main>
+    </div>
+
+    <script src="/app-home.js"></script>
+  </body>
+</html>
