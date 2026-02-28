@@ -157,6 +157,7 @@ let customersData = loadCustomers();
 let activeCustomerId = customersData[0]?.id || null;
 let activePetId = null;
 let activeBookableEmployeeId = bookableEmployees[0]?.id || null;
+let customerEditMode = false;
 
 function requireSession() {
   const raw = sessionStorage.getItem(SESSION_KEY);
@@ -191,6 +192,33 @@ function getActiveCustomer() {
 
 function setPetPreview(url) {
   document.getElementById('pet-photo-preview').src = getPetPhotoUrl(url);
+}
+
+function setCustomerEditMode(enabled) {
+  customerEditMode = enabled;
+  document.getElementById('customer-edit-section').classList.toggle('hidden', !enabled);
+  document.getElementById('pet-edit-section').classList.toggle('hidden', !enabled);
+  document.getElementById('new-pet-btn').disabled = !enabled;
+}
+
+function renderCustomerDetail(customer) {
+  const nameEl = document.getElementById('customer-detail-name');
+  const metaEl = document.getElementById('customer-detail-meta');
+  const notesEl = document.getElementById('customer-detail-notes');
+  const editBtn = document.getElementById('edit-customer-btn');
+
+  if (!customer) {
+    nameEl.textContent = 'Customer Details';
+    metaEl.textContent = 'Select a customer to view profile.';
+    notesEl.textContent = 'No customer selected.';
+    editBtn.disabled = true;
+    return;
+  }
+
+  nameEl.textContent = `${customer.firstName} ${customer.lastName}`;
+  metaEl.textContent = `${customer.email || 'No email'} • ${customer.phone || 'No phone'}`;
+  notesEl.textContent = customer.notes || 'No notes yet.';
+  editBtn.disabled = false;
 }
 
 function resetCustomerForm() {
@@ -261,6 +289,7 @@ function renderCustomerModule() {
       activePetId = null;
       fillCustomerForm(customer);
       resetPetForm();
+      setCustomerEditMode(false);
       renderCustomerModule();
     });
 
@@ -274,10 +303,12 @@ function renderCustomerModule() {
 
   if (!activeCustomer) {
     label.textContent = 'Select or create a customer first.';
+    renderCustomerDetail(null);
     return;
   }
 
   label.textContent = `${activeCustomer.firstName} ${activeCustomer.lastName}`;
+  renderCustomerDetail(activeCustomer);
 
   for (const pet of activeCustomer.pets) {
     const row = document.createElement('div');
@@ -307,7 +338,9 @@ function renderCustomerModule() {
       const petId = button.getAttribute('data-pet-id');
       const pet = activeCustomer.pets.find((entry) => entry.id === petId);
       if (pet) {
+        setCustomerEditMode(true);
         fillPetForm(pet);
+        document.getElementById('pet-output').textContent = `Editing ${pet.name}.`;
       }
     });
   }
@@ -429,10 +462,13 @@ function setupDashboard(session) {
   const activeCustomer = getActiveCustomer();
   if (activeCustomer) {
     fillCustomerForm(activeCustomer);
+    renderCustomerDetail(activeCustomer);
   } else {
     resetCustomerForm();
+    renderCustomerDetail(null);
   }
   resetPetForm();
+  setCustomerEditMode(false);
   renderCustomerModule();
 }
 
@@ -471,8 +507,23 @@ document.getElementById('new-customer-btn').addEventListener('click', () => {
   activePetId = null;
   resetCustomerForm();
   resetPetForm();
+  setCustomerEditMode(true);
+  renderCustomerDetail(null);
+  document.getElementById('customer-detail-name').textContent = 'New Customer';
+  document.getElementById('customer-detail-meta').textContent = 'Enter customer details and save.';
   document.getElementById('customer-output').textContent = 'Creating a new customer.';
   renderCustomerModule();
+});
+
+document.getElementById('edit-customer-btn').addEventListener('click', () => {
+  const activeCustomer = getActiveCustomer();
+  if (!activeCustomer) {
+    return;
+  }
+
+  fillCustomerForm(activeCustomer);
+  setCustomerEditMode(true);
+  document.getElementById('customer-output').textContent = `Editing ${activeCustomer.firstName} ${activeCustomer.lastName}.`;
 });
 
 document.getElementById('customer-form').addEventListener('submit', (event) => {
@@ -513,6 +564,7 @@ document.getElementById('customer-form').addEventListener('submit', (event) => {
   }
 
   saveCustomers();
+  setCustomerEditMode(false);
   renderCustomerModule();
 });
 
@@ -524,6 +576,7 @@ document.getElementById('new-pet-btn').addEventListener('click', () => {
   }
 
   resetPetForm();
+  setCustomerEditMode(true);
   document.getElementById('pet-output').textContent = `Adding new pet for ${activeCustomer.firstName} ${activeCustomer.lastName}.`;
 });
 
@@ -563,7 +616,7 @@ document.getElementById('pet-form').addEventListener('submit', (event) => {
   }
 
   saveCustomers();
-  resetPetForm();
+  setCustomerEditMode(false);
   renderCustomerModule();
 });
 

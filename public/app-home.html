@@ -97,7 +97,7 @@
               <div class="panel-head">
                 <div>
                   <h3>Customers</h3>
-                  <p class="muted">Select a customer to edit details and manage pets.</p>
+                  <p class="muted">Select a customer to open their profile.</p>
                 </div>
                 <button id="new-customer-btn" class="btn btn-outline" type="button">+ New Customer</button>
               </div>
@@ -105,27 +105,40 @@
             </article>
 
             <article class="card panel">
-              <h3>Customer Details</h3>
-              <form id="customer-form" class="settings-form compact-form">
-                <input type="hidden" name="customerId" />
-                <label>First Name
-                  <input name="firstName" required />
-                </label>
-                <label>Last Name
-                  <input name="lastName" required />
-                </label>
-                <label>Email
-                  <input name="email" type="email" />
-                </label>
-                <label>Phone
-                  <input name="phone" />
-                </label>
-                <label>Notes
-                  <input name="notes" />
-                </label>
-                <button class="btn btn-primary" type="submit">Save Customer</button>
-              </form>
+              <div id="customer-detail-view" class="customer-detail-view">
+                <div class="panel-head">
+                  <div>
+                    <h3 id="customer-detail-name">Customer Details</h3>
+                    <p id="customer-detail-meta" class="muted">Select a customer to view profile.</p>
+                  </div>
+                  <button id="edit-customer-btn" class="btn btn-outline" type="button" disabled>Edit Customer</button>
+                </div>
+                <div id="customer-detail-notes" class="record-card muted">No notes yet.</div>
+              </div>
+
               <div id="customer-output" class="inline-notice"></div>
+
+              <div id="customer-edit-section" class="hidden">
+                <form id="customer-form" class="settings-form compact-form">
+                  <input type="hidden" name="customerId" />
+                  <label>First Name
+                    <input name="firstName" required />
+                  </label>
+                  <label>Last Name
+                    <input name="lastName" required />
+                  </label>
+                  <label>Email
+                    <input name="email" type="email" />
+                  </label>
+                  <label>Phone
+                    <input name="phone" />
+                  </label>
+                  <label>Notes
+                    <input name="notes" />
+                  </label>
+                  <button class="btn btn-primary" type="submit">Save Customer</button>
+                </form>
+              </div>
 
               <div class="panel-head pets-head">
                 <div>
@@ -135,29 +148,31 @@
                 <button id="new-pet-btn" class="btn btn-outline" type="button">+ New Pet</button>
               </div>
 
-              <form id="pet-form" class="settings-form compact-form">
-                <input type="hidden" name="petId" />
-                <label>Pet Name
-                  <input name="name" required />
-                </label>
-                <label>Species
-                  <input name="species" value="dog" required />
-                </label>
-                <label>Breed
-                  <input name="breed" />
-                </label>
-                <label>Profile Photo URL
-                  <input name="photoUrl" type="url" placeholder="https://..." />
-                </label>
-                <div class="pet-photo-row">
-                  <img id="pet-photo-preview" src="https://placehold.co/96x96/e2e8f0/475569?text=PET" alt="Pet profile preview" />
-                  <label class="checkbox-label">
-                    <input name="archived" type="checkbox" />
-                    Archived
+              <div id="pet-edit-section" class="hidden">
+                <form id="pet-form" class="settings-form compact-form">
+                  <input type="hidden" name="petId" />
+                  <label>Pet Name
+                    <input name="name" required />
                   </label>
-                </div>
-                <button class="btn btn-primary" type="submit">Save Pet</button>
-              </form>
+                  <label>Species
+                    <input name="species" value="dog" required />
+                  </label>
+                  <label>Breed
+                    <input name="breed" />
+                  </label>
+                  <label>Profile Photo URL
+                    <input name="photoUrl" type="url" placeholder="https://..." />
+                  </label>
+                  <div class="pet-photo-row">
+                    <img id="pet-photo-preview" src="https://placehold.co/96x96/e2e8f0/475569?text=PET" alt="Pet profile preview" />
+                    <label class="checkbox-label">
+                      <input name="archived" type="checkbox" />
+                      Archived
+                    </label>
+                  </div>
+                  <button class="btn btn-primary" type="submit">Save Pet</button>
+                </form>
+              </div>
 
               <div id="pet-record-list" class="record-list pet-record-list"></div>
               <div id="pet-output" class="inline-notice"></div>
