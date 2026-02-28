@@ -274,6 +274,12 @@ pre {
   gap: 0.8rem;
 }
 
+.appointments-grid {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: 0.8rem;
+}
+
 .panel {
   padding: 1rem;
 }
@@ -476,6 +482,10 @@ pre {
   }
 
   .customer-module {
+    grid-template-columns: 1fr;
+  }
+
+  .appointments-grid {
     grid-template-columns: 1fr;
   }
 

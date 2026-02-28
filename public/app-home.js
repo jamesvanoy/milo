@@ -1,5 +1,4 @@
 const SESSION_KEY = 'milo_app_session';
-const SETTINGS_KEY = 'milo_app_settings';
 const CUSTOMERS_KEY = 'milo_app_customers';
 
 const arrivals = [
@@ -29,41 +28,54 @@ const calendarItems = [
   { time: '3:00 PM', item: 'Nala grooming appointment' }
 ];
 
-const reservationItems = [
-  { pet: 'Koda', owner: 'Emma Lewis', stay: 'Mar 3 - Mar 6', status: 'Pending' },
-  { pet: 'Rosie', owner: 'Liam Walker', stay: 'Mar 4 (Daycare)', status: 'Confirmed' },
-  { pet: 'Duke', owner: 'Olivia Hall', stay: 'Mar 5 - Mar 8', status: 'Pending' }
-];
-
-const billingItems = [
-  { invoice: 'INV-1043', customer: 'Mia Torres', total: '$232.14', status: 'Open' },
-  { invoice: 'INV-1044', customer: 'Avery Clark', total: '$78.21', status: 'Paid' },
-  { invoice: 'INV-1045', customer: 'Liam Walker', total: '$54.50', status: 'Open' }
-];
-
-const inventoryItems = [
-  { item: 'Large Kennel Cleaner', qty: 4, reorder: 6 },
-  { item: 'Premium Dog Food 30lb', qty: 11, reorder: 8 },
-  { item: 'Shampoo - Oatmeal', qty: 2, reorder: 5 }
-];
-
 const reportItems = [
   { metric: 'Boarding revenue', value: '$18,240', trend: '+8%' },
   { metric: 'Daycare visits', value: '412', trend: '+5%' },
   { metric: 'Grooming services', value: '96', trend: '+11%' }
 ];
 
+const bookableEmployees = [
+  {
+    id: 'emp_taylor',
+    name: 'Taylor Brooks',
+    role: 'Senior Groomer',
+    bookable: true,
+    calendar: [
+      { time: '9:00 AM', pet: 'Molly', service: 'Bath + Trim', status: 'Confirmed' },
+      { time: '11:00 AM', pet: 'Luna', service: 'Full Groom', status: 'Confirmed' },
+      { time: '2:30 PM', pet: 'Scout', service: 'Nails + Bath', status: 'Pending' }
+    ]
+  },
+  {
+    id: 'emp_casey',
+    name: 'Casey Nguyen',
+    role: 'Groomer',
+    bookable: true,
+    calendar: [
+      { time: '10:30 AM', pet: 'Winston', service: 'Full Groom', status: 'Confirmed' },
+      { time: '1:00 PM', pet: 'Bailey', service: 'Bath + Brush', status: 'Confirmed' },
+      { time: '4:00 PM', pet: 'Nala', service: 'Sanitary Trim', status: 'Pending' }
+    ]
+  },
+  {
+    id: 'emp_morgan',
+    name: 'Morgan Patel',
+    role: 'Grooming Assistant',
+    bookable: true,
+    calendar: [
+      { time: '9:30 AM', pet: 'Charlie', service: 'Nails + Ears', status: 'Confirmed' },
+      { time: '12:00 PM', pet: 'Rosie', service: 'Bath + Brush', status: 'Confirmed' },
+      { time: '3:30 PM', pet: 'Duke', service: 'Prep & Brush', status: 'Pending' }
+    ]
+  }
+];
+
 const tabTitles = {
-  dashboard: 'Operations Home',
+  home: 'Operations Home',
   calendar: 'Calendar',
-  reservations: 'Reservations',
-  customers: 'Customers & Pets',
-  daycare: 'Daycare',
-  grooming: 'Grooming',
-  billing: 'Billing',
-  inventory: 'Inventory',
+  customers: 'Customers',
   reports: 'Reports',
-  settings: 'Settings'
+  appointments: 'Appointments'
 };
 
 function makeId(prefix) {
@@ -144,6 +156,7 @@ function saveCustomers() {
 let customersData = loadCustomers();
 let activeCustomerId = customersData[0]?.id || null;
 let activePetId = null;
+let activeBookableEmployeeId = bookableEmployees[0]?.id || null;
 
 function requireSession() {
   const raw = sessionStorage.getItem(SESSION_KEY);
@@ -327,36 +340,46 @@ function activateTab(tabName) {
   document.getElementById('active-tab-title').textContent = tabTitles[tabName] || 'Operations Home';
 }
 
-function loadSettings() {
-  const fallback = {
-    facilityName: 'MILO Demo Boarding',
-    timezone: 'America/New_York',
-    kennelCount: 24,
-    boardingRate: 58,
-    daycareRate: 34,
-    groomingRate: 45
-  };
+function renderAppointmentsModule() {
+  const listEl = document.getElementById('bookable-employee-list');
+  const calendarEl = document.getElementById('employee-calendar-list');
+  const titleEl = document.getElementById('appointments-title');
+  listEl.innerHTML = '';
+  calendarEl.innerHTML = '';
 
-  const raw = localStorage.getItem(SETTINGS_KEY);
-  if (!raw) {
-    return fallback;
+  const employees = bookableEmployees.filter((employee) => employee.bookable);
+
+  for (const employee of employees) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = `record-button ${employee.id === activeBookableEmployeeId ? 'active' : ''}`;
+    button.innerHTML = `
+      <div class="record-title">${employee.name}</div>
+      <div class="record-sub">${employee.role} • ${employee.calendar.length} appointments</div>
+    `;
+
+    button.addEventListener('click', () => {
+      activeBookableEmployeeId = employee.id;
+      renderAppointmentsModule();
+    });
+
+    listEl.appendChild(button);
   }
 
-  try {
-    return { ...fallback, ...JSON.parse(raw) };
-  } catch {
-    return fallback;
+  const activeEmployee = employees.find((employee) => employee.id === activeBookableEmployeeId) || employees[0] || null;
+  if (!activeEmployee) {
+    titleEl.textContent = 'Employee Calendar';
+    calendarEl.innerHTML = '<div class="record-card">No bookable employees configured.</div>';
+    return;
   }
-}
 
-function applySettingsToForm(settings) {
-  const form = document.getElementById('settings-form');
-  form.facilityName.value = settings.facilityName;
-  form.timezone.value = settings.timezone;
-  form.kennelCount.value = settings.kennelCount;
-  form.boardingRate.value = settings.boardingRate;
-  form.daycareRate.value = settings.daycareRate;
-  form.groomingRate.value = settings.groomingRate;
+  activeBookableEmployeeId = activeEmployee.id;
+  titleEl.textContent = `${activeEmployee.name} Calendar`;
+
+  renderList('employee-calendar-list', activeEmployee.calendar, (entry) => `
+    <strong>${entry.time}</strong>
+    <div class="inline"><span>${entry.pet} • ${entry.service}</span><span>${entry.status}</span></div>
+  `);
 }
 
 function setupDashboard(session) {
@@ -397,40 +420,12 @@ function setupDashboard(session) {
     <div class="inline"><span>${item.item}</span></div>
   `);
 
-  renderList('reservation-list', reservationItems, (item) => `
-    <strong>${item.pet}</strong>
-    <div class="inline"><span>${item.owner}</span><span>${item.status}</span></div>
-    <div class="inline"><span>${item.stay}</span></div>
-  `);
-
-  renderList('daycare-tab-list', daycareGroups, (item) => `
-    <strong>${item.group}</strong>
-    <div class="inline"><span>${item.dogs} dogs</span><span>Lead: ${item.lead}</span></div>
-  `);
-
-  renderList('grooming-tab-list', groomingQueue, (item) => `
-    <strong>${item.dog}</strong>
-    <div class="inline"><span>${item.service}</span><span>${item.time}</span></div>
-    <div class="inline"><span>Groomer: ${item.groomer}</span></div>
-  `);
-
-  renderList('billing-list', billingItems, (item) => `
-    <strong>${item.invoice}</strong>
-    <div class="inline"><span>${item.customer}</span><span>${item.total}</span></div>
-    <div class="inline"><span>Status: ${item.status}</span></div>
-  `);
-
-  renderList('inventory-list', inventoryItems, (item) => `
-    <strong>${item.item}</strong>
-    <div class="inline"><span>Qty: ${item.qty}</span><span>Reorder: ${item.reorder}</span></div>
-  `);
-
   renderList('report-list', reportItems, (item) => `
     <strong>${item.metric}</strong>
     <div class="inline"><span>${item.value}</span><span>${item.trend}</span></div>
   `);
 
-  applySettingsToForm(loadSettings());
+  renderAppointmentsModule();
   const activeCustomer = getActiveCustomer();
   if (activeCustomer) {
     fillCustomerForm(activeCustomer);
@@ -446,7 +441,7 @@ if (session) {
   setupDashboard(session);
 }
 
-activateTab('dashboard');
+activateTab('home');
 
 for (const tabButton of document.querySelectorAll('.menu-tab')) {
   tabButton.addEventListener('click', (event) => {
@@ -470,23 +465,6 @@ for (const button of document.querySelectorAll('[data-action]')) {
     }
   });
 }
-
-document.getElementById('settings-form').addEventListener('submit', (event) => {
-  event.preventDefault();
-  const form = event.currentTarget;
-
-  const settings = {
-    facilityName: form.facilityName.value.trim(),
-    timezone: form.timezone.value.trim(),
-    kennelCount: Number(form.kennelCount.value),
-    boardingRate: Number(form.boardingRate.value),
-    daycareRate: Number(form.daycareRate.value),
-    groomingRate: Number(form.groomingRate.value)
-  };
-
-  localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
-  document.getElementById('settings-output').textContent = 'Settings saved locally for this browser session.';
-});
 
 document.getElementById('new-customer-btn').addEventListener('click', () => {
   activeCustomerId = null;
