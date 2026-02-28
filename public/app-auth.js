@@ -24,7 +24,6 @@ document.getElementById('app-login-form').addEventListener('submit', (event) => 
   const formData = new FormData(event.currentTarget);
   const email = String(formData.get('email') || '').trim().toLowerCase();
   const password = String(formData.get('password') || '');
-  const role = String(formData.get('role') || 'employee');
 
   if (!email || !password) {
     writeOutput({ error: 'Email and password are required' });
@@ -33,7 +32,7 @@ document.getElementById('app-login-form').addEventListener('submit', (event) => 
 
   const session = {
     email,
-    role,
+    role: 'staff',
     name: displayNameFromEmail(email),
     signedInAt: new Date().toISOString(),
     authMode: 'fake-login'
