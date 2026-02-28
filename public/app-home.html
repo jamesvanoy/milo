@@ -15,73 +15,169 @@
           <small id="user-role">role</small>
         </div>
         <nav class="menu">
-          <a class="active" href="/app-home.html">Dashboard</a>
-          <a href="#">Calendar</a>
-          <a href="#">Reservations</a>
-          <a href="#">Customers & Pets</a>
-          <a href="#">Daycare</a>
-          <a href="#">Grooming</a>
-          <a href="#">Billing</a>
-          <a href="#">Inventory</a>
-          <a href="#">Reports</a>
+          <a class="active menu-tab" href="#" data-tab="dashboard">Dashboard</a>
+          <a class="menu-tab" href="#" data-tab="calendar">Calendar</a>
+          <a class="menu-tab" href="#" data-tab="reservations">Reservations</a>
+          <a class="menu-tab" href="#" data-tab="customers">Customers & Pets</a>
+          <a class="menu-tab" href="#" data-tab="daycare">Daycare</a>
+          <a class="menu-tab" href="#" data-tab="grooming">Grooming</a>
+          <a class="menu-tab" href="#" data-tab="billing">Billing</a>
+          <a class="menu-tab" href="#" data-tab="inventory">Inventory</a>
+          <a class="menu-tab" href="#" data-tab="reports">Reports</a>
+          <a class="menu-tab" href="#" data-tab="settings">Settings</a>
         </nav>
       </aside>
 
       <main class="content">
         <div class="topbar-row">
           <div>
-            <h2>Operations Home</h2>
+            <h2 id="active-tab-title">Operations Home</h2>
             <p id="today-label">Today</p>
           </div>
           <button id="logout-btn" class="btn btn-outline">Log Out</button>
         </div>
 
-        <section class="kpi-grid">
-          <article class="card kpi">
-            <small>Boarding Occupancy</small>
-            <div class="value" id="kpi-occupancy">0%</div>
-          </article>
-          <article class="card kpi">
-            <small>Dogs On Site</small>
-            <div class="value" id="kpi-onsite">0</div>
-          </article>
-          <article class="card kpi">
-            <small>Daycare Check-ins</small>
-            <div class="value" id="kpi-daycare">0</div>
-          </article>
-          <article class="card kpi">
-            <small>Grooming Appointments</small>
-            <div class="value" id="kpi-grooming">0</div>
+        <section class="tab-panel active" data-panel="dashboard">
+          <section class="kpi-grid">
+            <article class="card kpi">
+              <small>Boarding Occupancy</small>
+              <div class="value" id="kpi-occupancy">0%</div>
+            </article>
+            <article class="card kpi">
+              <small>Dogs On Site</small>
+              <div class="value" id="kpi-onsite">0</div>
+            </article>
+            <article class="card kpi">
+              <small>Daycare Check-ins</small>
+              <div class="value" id="kpi-daycare">0</div>
+            </article>
+            <article class="card kpi">
+              <small>Grooming Appointments</small>
+              <div class="value" id="kpi-grooming">0</div>
+            </article>
+          </section>
+
+          <section class="dashboard-grid">
+            <article class="card panel">
+              <h3>Arrivals & Departures</h3>
+              <div id="arrivals-list" class="list"></div>
+            </article>
+
+            <article class="card panel">
+              <h3>Quick Actions</h3>
+              <div class="action-row">
+                <button class="btn btn-primary" data-action="New Reservation" data-target-tab="reservations">New Reservation</button>
+                <button class="btn btn-primary" data-action="Check In Dog" data-target-tab="calendar">Check In Dog</button>
+                <button class="btn btn-outline" data-action="Schedule Grooming" data-target-tab="grooming">Schedule Grooming</button>
+                <button class="btn btn-outline" data-action="Open Billing" data-target-tab="billing">Open Billing</button>
+              </div>
+              <div id="action-output" class="inline-notice"></div>
+            </article>
+          </section>
+
+          <section class="dashboard-grid">
+            <article class="card panel">
+              <h3>Daycare Groups</h3>
+              <div id="daycare-list" class="list"></div>
+            </article>
+
+            <article class="card panel">
+              <h3>Grooming Queue</h3>
+              <div id="grooming-list" class="list"></div>
+            </article>
+          </section>
+        </section>
+
+        <section class="tab-panel" data-panel="calendar">
+          <article class="card panel">
+            <h3>Calendar</h3>
+            <p class="muted">Today’s calendar blocks for check-ins, check-outs, daycare, and grooming.</p>
+            <div id="calendar-list" class="list"></div>
           </article>
         </section>
 
-        <section class="dashboard-grid">
+        <section class="tab-panel" data-panel="reservations">
           <article class="card panel">
-            <h3>Arrivals & Departures</h3>
-            <div id="arrivals-list" class="list"></div>
-          </article>
-
-          <article class="card panel">
-            <h3>Quick Actions</h3>
-            <div class="action-row">
-              <button class="btn btn-primary" data-action="New Reservation">New Reservation</button>
-              <button class="btn btn-primary" data-action="Check In Dog">Check In Dog</button>
-              <button class="btn btn-outline" data-action="Schedule Grooming">Schedule Grooming</button>
-              <button class="btn btn-outline" data-action="Open Billing">Open Billing</button>
-            </div>
-            <pre id="action-output"></pre>
+            <h3>Reservations</h3>
+            <p class="muted">Pending and upcoming reservations requiring staff action.</p>
+            <div id="reservation-list" class="list"></div>
           </article>
         </section>
 
-        <section class="dashboard-grid">
+        <section class="tab-panel" data-panel="customers">
           <article class="card panel">
-            <h3>Daycare Groups</h3>
-            <div id="daycare-list" class="list"></div>
+            <h3>Customers & Pets</h3>
+            <p class="muted">Recent customer accounts and pet profiles.</p>
+            <div id="customer-list" class="list"></div>
           </article>
+        </section>
 
+        <section class="tab-panel" data-panel="daycare">
           <article class="card panel">
-            <h3>Grooming Queue</h3>
-            <div id="grooming-list" class="list"></div>
+            <h3>Daycare</h3>
+            <p class="muted">Group assignments and attendance.</p>
+            <div id="daycare-tab-list" class="list"></div>
+          </article>
+        </section>
+
+        <section class="tab-panel" data-panel="grooming">
+          <article class="card panel">
+            <h3>Grooming</h3>
+            <p class="muted">Queue, groomer workload, and service status.</p>
+            <div id="grooming-tab-list" class="list"></div>
+          </article>
+        </section>
+
+        <section class="tab-panel" data-panel="billing">
+          <article class="card panel">
+            <h3>Billing</h3>
+            <p class="muted">Open invoices and today’s payment activity.</p>
+            <div id="billing-list" class="list"></div>
+          </article>
+        </section>
+
+        <section class="tab-panel" data-panel="inventory">
+          <article class="card panel">
+            <h3>Inventory</h3>
+            <p class="muted">Retail and supply levels with low-stock highlights.</p>
+            <div id="inventory-list" class="list"></div>
+          </article>
+        </section>
+
+        <section class="tab-panel" data-panel="reports">
+          <article class="card panel">
+            <h3>Reports</h3>
+            <p class="muted">High-level performance metrics for the current month.</p>
+            <div id="report-list" class="list"></div>
+          </article>
+        </section>
+
+        <section class="tab-panel" data-panel="settings">
+          <article class="card panel">
+            <h3>Settings</h3>
+            <p class="muted">Facility configuration for operations and pricing defaults.</p>
+            <form id="settings-form" class="settings-form">
+              <label>Facility Name
+                <input name="facilityName" required />
+              </label>
+              <label>Timezone
+                <input name="timezone" required />
+              </label>
+              <label>Kennel Count
+                <input name="kennelCount" type="number" min="1" required />
+              </label>
+              <label>Boarding Rate (per night)
+                <input name="boardingRate" type="number" min="0" step="0.01" required />
+              </label>
+              <label>Daycare Rate (per day)
+                <input name="daycareRate" type="number" min="0" step="0.01" required />
+              </label>
+              <label>Grooming Base Rate
+                <input name="groomingRate" type="number" min="0" step="0.01" required />
+              </label>
+              <button class="btn btn-primary" type="submit">Save Settings</button>
+            </form>
+            <div id="settings-output" class="inline-notice"></div>
           </article>
         </section>
       </main>
