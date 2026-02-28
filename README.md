@@ -1,30 +1,47 @@
 # MILO
 
-Starter repository for the MILO app with a deployable Node service and GitHub + Railway flow.
+Web-based software starter for dog boarding facilities that also offer daycare, grooming, retail, and billing operations.
 
-## Runtime
+## Included in this starter
 
-- Node.js 18+
-- Start command: `npm start`
+- Home page + login-capable frontend (`public/`)
+- Authentication + role-based access
+- Facility settings with kennel count, tax rates, and pricing
+- Calendar availability + reservation quoting for day/night billing
+- Customer + pet records
+- Employee records
+- Grooming appointment records
+- Inventory item records
+- Invoice and sales tax calculation endpoints
 
-The app listens on `PORT` and responds with JSON.
-
-## Connect GitHub to Railway (auto-deploy)
-
-1. Open Railway dashboard.
-2. Click **New Project** → **Deploy from GitHub repo**.
-3. Select the `MILO` repository.
-4. Choose the `main` branch.
-5. In project settings, keep **Auto Deploy** enabled for `main`.
-
-After this, every push to `main` from this workspace triggers a Railway deployment.
-
-## Daily workflow
+## Quick start
 
 ```bash
-git add .
-git commit -m "feat: your change"
-git push
+npm install
+npm start
 ```
 
-Railway will deploy automatically after each push.
+Default local URL: `http://localhost:3000`
+
+Demo login:
+
+- email: `admin@milo.local`
+- password: `ChangeMe123!`
+
+## API
+
+See:
+
+- `docs/api-overview.md`
+- `docs/data-model.md`
+- `docs/product-roadmap.md`
+
+## Railway deploy flow
+
+1. Push changes to `main` on GitHub.
+2. Railway auto-deploys from that branch.
+3. Ensure environment variables in Railway:
+	- `JWT_SECRET` (required for production)
+	- `TOKEN_TTL` (optional, default `12h`)
+
+The app automatically binds to Railway `PORT`.
