@@ -7,6 +7,7 @@ const calendarRoutes = require('./calendarRoutes');
 const groomingRoutes = require('./groomingRoutes');
 const inventoryRoutes = require('./inventoryRoutes');
 const billingRoutes = require('./billingRoutes');
+const portalRoutes = require('./portalRoutes');
 
 const router = express.Router();
 
@@ -22,5 +23,6 @@ router.use('/calendar', calendarRoutes);
 router.use('/grooming', groomingRoutes);
 router.use('/inventory', inventoryRoutes);
 router.use('/billing', billingRoutes);
+router.use('/portal', portalRoutes);
 
 module.exports = router;

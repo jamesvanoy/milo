@@ -13,6 +13,7 @@ Web-based software starter for dog boarding facilities that also offer daycare, 
 - Grooming appointment records
 - Inventory item records
 - Invoice and sales tax calculation endpoints
+- Customer self-service portal (signup/login/pets/booking)
 
 ## Quick start
 
@@ -35,6 +36,24 @@ See:
 - `docs/api-overview.md`
 - `docs/data-model.md`
 - `docs/product-roadmap.md`
+
+## Customer booking portal
+
+- Hosted portal URL: `https://milo-production-aac7.up.railway.app/portal.html`
+- Customers can create their own account, add pets, quote services, and submit reservations.
+
+Embed this portal on your public website:
+
+```html
+<iframe
+	src="https://milo-production-aac7.up.railway.app/portal.html"
+	title="MILO Booking Portal"
+	width="100%"
+	height="900"
+	style="border:0;max-width:1200px;"
+	loading="lazy"
+></iframe>
+```
 
 ## Railway deploy flow
 

@@ -7,6 +7,21 @@ const { requireAuth } = require('../middleware/auth');
 
 const router = express.Router();
 
+function signUserToken(user) {
+  return jwt.sign(
+    {
+      role: user.role,
+      email: user.email,
+      customerId: user.customerId || null
+    },
+    config.jwtSecret,
+    {
+      subject: user.id,
+      expiresIn: config.tokenTtl
+    }
+  );
+}
+
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
@@ -24,17 +39,7 @@ router.post('/login', async (req, res) => {
     return res.status(401).json({ error: 'Invalid credentials' });
   }
 
-  const token = jwt.sign(
-    {
-      role: user.role,
-      email: user.email
-    },
-    config.jwtSecret,
-    {
-      subject: user.id,
-      expiresIn: config.tokenTtl
-    }
-  );
+  const token = signUserToken(user);
 
   return res.json({
     token,
@@ -76,3 +81,5 @@ router.get('/me', requireAuth, (req, res) => {
 });
 
 module.exports = router;
+
+module.exports.signUserToken = signUserToken;

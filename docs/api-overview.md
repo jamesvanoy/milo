@@ -51,3 +51,15 @@ Base URL: `/api`
 - `GET /billing/invoices`
 - `POST /billing/invoices/from-reservation/:reservationId`
 - `POST /billing/sales`
+
+## Customer Portal
+
+- `GET /portal/public/config`
+- `POST /portal/register`
+- `POST /portal/login`
+- `GET /portal/me`
+- `GET /portal/pets`
+- `POST /portal/pets`
+- `GET /portal/reservations`
+- `POST /portal/quote`
+- `POST /portal/reservations`

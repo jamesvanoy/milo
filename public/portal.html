@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MILO Customer Portal</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header>
+      <h1>MILO Customer Portal</h1>
+      <p id="facility-name">Loading facility...</p>
+    </header>
+
+    <main>
+      <section class="card grid-2">
+        <div>
+          <h2>Create Account</h2>
+          <form id="register-form">
+            <label>First name <input name="firstName" required /></label>
+            <label>Last name <input name="lastName" required /></label>
+            <label>Email <input name="email" type="email" required /></label>
+            <label>Phone <input name="phone" /></label>
+            <label>Password <input name="password" type="password" required /></label>
+            <button type="submit">Create Account</button>
+          </form>
+        </div>
+        <div>
+          <h2>Customer Login</h2>
+          <form id="login-form">
+            <label>Email <input name="email" type="email" required /></label>
+            <label>Password <input name="password" type="password" required /></label>
+            <button type="submit">Sign In</button>
+          </form>
+          <pre id="auth-output"></pre>
+        </div>
+      </section>
+
+      <section class="card grid-2">
+        <div>
+          <h2>Add Pet</h2>
+          <form id="pet-form">
+            <label>Pet name <input name="name" required /></label>
+            <label>Breed <input name="breed" /></label>
+            <label>Weight (lbs) <input name="weightLbs" type="number" min="0" step="0.1" /></label>
+            <button type="submit">Save Pet</button>
+          </form>
+          <button id="load-pets">Load My Pets</button>
+          <pre id="pets-output"></pre>
+        </div>
+        <div>
+          <h2>Booking Quote</h2>
+          <form id="quote-form">
+            <label>Service
+              <select name="serviceType">
+                <option value="boarding">Boarding</option>
+                <option value="daycare">Daycare</option>
+              </select>
+            </label>
+            <label>Billing
+              <select name="billingMode">
+                <option value="night">By Night</option>
+                <option value="day">By Day</option>
+              </select>
+            </label>
+            <label>Check-in <input name="checkInAt" type="datetime-local" required /></label>
+            <label>Check-out <input name="checkOutAt" type="datetime-local" required /></label>
+            <label>Kennels required <input name="kennelsRequired" type="number" min="1" value="1" required /></label>
+            <button type="submit">Get Quote</button>
+          </form>
+          <pre id="quote-output"></pre>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Create Reservation</h2>
+        <form id="reservation-form">
+          <label>Pet
+            <select name="petId" id="reservation-pet" required></select>
+          </label>
+          <label>Service
+            <select name="serviceType">
+              <option value="boarding">Boarding</option>
+              <option value="daycare">Daycare</option>
+            </select>
+          </label>
+          <label>Billing
+            <select name="billingMode">
+              <option value="night">By Night</option>
+              <option value="day">By Day</option>
+            </select>
+          </label>
+          <label>Check-in <input name="checkInAt" type="datetime-local" required /></label>
+          <label>Check-out <input name="checkOutAt" type="datetime-local" required /></label>
+          <label>Notes <input name="notes" /></label>
+          <button type="submit">Submit Reservation</button>
+        </form>
+        <button id="load-reservations">Load My Reservations</button>
+        <pre id="reservation-output"></pre>
+      </section>
+    </main>
+
+    <script src="/portal.js"></script>
+  </body>
+</html>
