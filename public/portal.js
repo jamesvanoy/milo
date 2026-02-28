@@ -1,6 +1,8 @@
 let token = null;
 let pets = [];
 
+const params = new URLSearchParams(window.location.search);
+
 function toIsoFromLocal(value) {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) {
@@ -63,24 +65,49 @@ initializePortal().catch((error) => {
   document.getElementById('facility-name').textContent = `Portal unavailable: ${error.message}`;
 });
 
-document.getElementById('register-form').addEventListener('submit', async (event) => {
+if (params.get('verifyToken')) {
+  document.getElementById('verify-token').value = params.get('verifyToken');
+}
+
+document.getElementById('register-request-form').addEventListener('submit', async (event) => {
   event.preventDefault();
 
   const formData = new FormData(event.target);
   try {
-    const result = await api('/api/portal/register', {
+    const result = await api('/api/portal/register/request', {
       method: 'POST',
       body: JSON.stringify({
         firstName: formData.get('firstName'),
         lastName: formData.get('lastName'),
         email: formData.get('email'),
-        phone: formData.get('phone'),
+        phone: formData.get('phone')
+      })
+    });
+
+    write('register-output', result);
+    if (result.pendingSignup && result.pendingSignup.token) {
+      document.getElementById('verify-token').value = result.pendingSignup.token;
+    }
+  } catch (error) {
+    write('register-output', { error: error.message });
+  }
+});
+
+document.getElementById('register-complete-form').addEventListener('submit', async (event) => {
+  event.preventDefault();
+
+  const formData = new FormData(event.target);
+  try {
+    const result = await api('/api/portal/register/complete', {
+      method: 'POST',
+      body: JSON.stringify({
+        token: formData.get('token'),
         password: formData.get('password')
       })
     });
 
     token = result.token;
-    write('auth-output', { message: 'Account created', user: result.user, customer: result.customer });
+    write('auth-output', { message: 'Account verified and created', user: result.user, customer: result.customer });
     await refreshPets();
     await refreshReservations();
   } catch (error) {

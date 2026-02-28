@@ -55,7 +55,9 @@ Base URL: `/api`
 ## Customer Portal
 
 - `GET /portal/public/config`
-- `POST /portal/register`
+- `POST /portal/register/request`
+- `GET /portal/register/pending/:token`
+- `POST /portal/register/complete`
 - `POST /portal/login`
 - `GET /portal/me`
 - `GET /portal/pets`

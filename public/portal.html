@@ -15,14 +15,22 @@
     <main>
       <section class="card grid-2">
         <div>
-          <h2>Create Account</h2>
-          <form id="register-form">
+          <h2>Step 1: Request Account</h2>
+          <form id="register-request-form">
             <label>First name <input name="firstName" required /></label>
             <label>Last name <input name="lastName" required /></label>
             <label>Email <input name="email" type="email" required /></label>
             <label>Phone <input name="phone" /></label>
-            <label>Password <input name="password" type="password" required /></label>
-            <button type="submit">Create Account</button>
+            <button type="submit">Send Confirmation Email</button>
+          </form>
+          <p class="hint">We will send a confirmation link before the account is created.</p>
+          <pre id="register-output"></pre>
+
+          <h2>Step 2: Confirm + Create Password</h2>
+          <form id="register-complete-form">
+            <label>Confirmation token <input name="token" id="verify-token" required /></label>
+            <label>Create password <input name="password" type="password" minlength="8" required /></label>
+            <button type="submit">Create My Account</button>
           </form>
         </div>
         <div>

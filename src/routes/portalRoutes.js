@@ -1,10 +1,12 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
+const { randomUUID } = require('crypto');
 const { data, list, insert, findById } = require('../data/store');
 const { requireAuth, requireCustomer } = require('../middleware/auth');
 const { signUserToken } = require('./authRoutes');
 const { quoteReservation } = require('../services/calendarService');
 const { calculateSubtotal, calculateTax } = require('../services/pricingService');
+const { sendCustomerVerificationEmail } = require('../services/emailService');
 
 const router = express.Router();
 
@@ -31,6 +33,34 @@ function sanitizeUser(user) {
   };
 }
 
+function getBaseUrl(req) {
+  if (process.env.PUBLIC_BASE_URL) {
+    return process.env.PUBLIC_BASE_URL.replace(/\/$/, '');
+  }
+
+  const forwardedProto = req.headers['x-forwarded-proto'];
+  const forwardedHost = req.headers['x-forwarded-host'];
+  const protocol = forwardedProto ? String(forwardedProto).split(',')[0].trim() : req.protocol;
+  const host = forwardedHost || req.get('host');
+
+  return `${protocol}://${host}`;
+}
+
+function findPendingSignupByToken(token) {
+  return data.pendingCustomerSignups.find((entry) => entry.token === token) || null;
+}
+
+function sanitizePendingSignup(entry) {
+  return {
+    token: entry.token,
+    firstName: entry.firstName,
+    lastName: entry.lastName,
+    email: entry.email,
+    expiresAt: entry.expiresAt,
+    usedAt: entry.usedAt || null
+  };
+}
+
 router.get('/public/config', (req, res) => {
   return res.json({
     facility: {
@@ -44,11 +74,11 @@ router.get('/public/config', (req, res) => {
   });
 });
 
-router.post('/register', async (req, res) => {
-  const { firstName, lastName, email, phone, password } = req.body;
+router.post('/register/request', async (req, res) => {
+  const { firstName, lastName, email, phone } = req.body;
 
-  if (!firstName || !lastName || !email || !password) {
-    return res.status(400).json({ error: 'firstName, lastName, email, and password are required' });
+  if (!firstName || !lastName || !email) {
+    return res.status(400).json({ error: 'firstName, lastName, and email are required' });
   }
 
   const normalizedEmail = String(email).toLowerCase();
@@ -57,30 +87,116 @@ router.post('/register', async (req, res) => {
     return res.status(409).json({ error: 'An account already exists for this email' });
   }
 
-  let customer = data.customers.find((entry) => (entry.email || '').toLowerCase() === normalizedEmail);
+  for (const pending of data.pendingCustomerSignups) {
+    if (pending.email === normalizedEmail && !pending.usedAt) {
+      pending.usedAt = new Date().toISOString();
+    }
+  }
+
+  const now = Date.now();
+  const expiresAt = new Date(now + 24 * 60 * 60 * 1000).toISOString();
+  const verificationToken = randomUUID();
+
+  const pending = insert('pendingCustomerSignups', {
+    token: verificationToken,
+    firstName,
+    lastName,
+    email: normalizedEmail,
+    phone: phone || null,
+    expiresAt,
+    usedAt: null
+  });
+
+  const verificationUrl = `${getBaseUrl(req)}/portal.html?verifyToken=${encodeURIComponent(verificationToken)}&email=${encodeURIComponent(normalizedEmail)}`;
+  const emailResult = await sendCustomerVerificationEmail({
+    email: normalizedEmail,
+    firstName,
+    verificationUrl
+  });
+
+  return res.status(201).json({
+    message: 'Confirmation email sent. Please verify your email, then create your password.',
+    email: normalizedEmail,
+    expiresAt,
+    emailDelivery: emailResult.mode,
+    verificationUrlPreview: emailResult.sent ? null : verificationUrl,
+    pendingSignup: sanitizePendingSignup(pending)
+  });
+});
+
+router.get('/register/pending/:token', (req, res) => {
+  const pending = findPendingSignupByToken(req.params.token);
+  if (!pending) {
+    return res.status(404).json({ error: 'Invalid confirmation token' });
+  }
+
+  if (pending.usedAt) {
+    return res.status(410).json({ error: 'This confirmation token has already been used' });
+  }
+
+  if (new Date(pending.expiresAt) < new Date()) {
+    return res.status(410).json({ error: 'This confirmation token has expired' });
+  }
+
+  return res.json({ pendingSignup: sanitizePendingSignup(pending) });
+});
+
+router.post('/register/complete', async (req, res) => {
+  const { token: verificationToken, password } = req.body;
+
+  if (!verificationToken || !password) {
+    return res.status(400).json({ error: 'token and password are required' });
+  }
+
+  if (String(password).length < 8) {
+    return res.status(400).json({ error: 'Password must be at least 8 characters' });
+  }
+
+  const pending = findPendingSignupByToken(verificationToken);
+  if (!pending) {
+    return res.status(404).json({ error: 'Invalid confirmation token' });
+  }
+
+  if (pending.usedAt) {
+    return res.status(410).json({ error: 'This confirmation token has already been used' });
+  }
+
+  if (new Date(pending.expiresAt) < new Date()) {
+    return res.status(410).json({ error: 'This confirmation token has expired' });
+  }
+
+  const existingUser = data.users.find((entry) => entry.email.toLowerCase() === pending.email.toLowerCase());
+  if (existingUser) {
+    return res.status(409).json({ error: 'An account already exists for this email' });
+  }
+
+  let customer = data.customers.find((entry) => (entry.email || '').toLowerCase() === pending.email.toLowerCase());
   if (!customer) {
     customer = insert('customers', {
-      firstName,
-      lastName,
-      email: normalizedEmail,
-      phone: phone || null,
+      firstName: pending.firstName,
+      lastName: pending.lastName,
+      email: pending.email,
+      phone: pending.phone || null,
       notes: 'Created from online portal registration'
     });
   }
 
   const passwordHash = await bcrypt.hash(password, 10);
   const user = insert('users', {
-    name: `${firstName} ${lastName}`,
-    email: normalizedEmail,
+    name: `${pending.firstName} ${pending.lastName}`,
+    email: pending.email,
     passwordHash,
     role: 'customer',
     active: true,
     customerId: customer.id
   });
 
+  pending.usedAt = new Date().toISOString();
+
   const token = signUserToken(user);
 
   return res.status(201).json({
+    message: 'Account created successfully',
     token,
     user: sanitizeUser(user),
     customer: sanitizeCustomer(customer)

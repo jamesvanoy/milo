@@ -38,6 +38,7 @@ const data = {
   ],
   employees: [],
   customers: [],
+  pendingCustomerSignups: [],
   pets: [],
   reservations: [],
   groomingAppointments: [],

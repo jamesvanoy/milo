@@ -41,8 +41,21 @@ See:
 
 - Public homepage: `https://milo-production-aac7.up.railway.app/`
 - Hosted portal URL: `https://milo-production-aac7.up.railway.app/portal.html`
-- Customers can create their own account, add pets, quote services, and submit reservations.
+- Customers request signup, confirm by email link, create password, then log in to add pets, quote services, and submit reservations.
 - Staff console: `https://milo-production-aac7.up.railway.app/app.html`
+
+### Email confirmation setup (recommended)
+
+Set these Railway variables for real email delivery:
+
+- `SMTP_HOST`
+- `SMTP_PORT` (e.g. `587`)
+- `SMTP_USER`
+- `SMTP_PASS`
+- `MAIL_FROM` (e.g. `no-reply@yourdomain.com`)
+- `PUBLIC_BASE_URL` (e.g. `https://milo-production-aac7.up.railway.app`)
+
+If SMTP is not configured, MILO still creates confirmation links and logs them for manual testing.
 
 Embed this portal on your public website:
 
