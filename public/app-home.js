@@ -1,5 +1,6 @@
 const SESSION_KEY = 'milo_app_session';
 const SETTINGS_KEY = 'milo_app_settings';
+const CUSTOMERS_KEY = 'milo_app_customers';
 
 const arrivals = [
   { dog: 'Charlie', owner: 'Mia Torres', type: 'Arrival', time: '8:30 AM', service: 'Boarding' },
@@ -34,12 +35,6 @@ const reservationItems = [
   { pet: 'Duke', owner: 'Olivia Hall', stay: 'Mar 5 - Mar 8', status: 'Pending' }
 ];
 
-const customerItems = [
-  { customer: 'Mia Torres', pets: 'Charlie, Sunny', phone: '555-2041' },
-  { customer: 'Avery Clark', pets: 'Luna', phone: '555-8821' },
-  { customer: 'Riley James', pets: 'Cooper', phone: '555-4382' }
-];
-
 const billingItems = [
   { invoice: 'INV-1043', customer: 'Mia Torres', total: '$232.14', status: 'Open' },
   { invoice: 'INV-1044', customer: 'Avery Clark', total: '$78.21', status: 'Paid' },
@@ -71,6 +66,85 @@ const tabTitles = {
   settings: 'Settings'
 };
 
+function makeId(prefix) {
+  return `${prefix}_${Math.random().toString(36).slice(2, 9)}`;
+}
+
+function getPetPhotoUrl(url) {
+  return url && url.trim() ? url.trim() : 'https://placehold.co/96x96/e2e8f0/475569?text=PET';
+}
+
+function getDefaultCustomers() {
+  return [
+    {
+      id: 'cust_mia',
+      firstName: 'Mia',
+      lastName: 'Torres',
+      email: 'mia.torres@example.com',
+      phone: '555-2041',
+      notes: 'Prefers text updates',
+      pets: [
+        {
+          id: 'pet_charlie',
+          name: 'Charlie',
+          species: 'dog',
+          breed: 'Golden Retriever',
+          photoUrl: 'https://placehold.co/96x96/fef3c7/92400e?text=Charlie',
+          archived: false
+        },
+        {
+          id: 'pet_sunny',
+          name: 'Sunny',
+          species: 'dog',
+          breed: 'Labrador',
+          photoUrl: 'https://placehold.co/96x96/dbeafe/1e3a8a?text=Sunny',
+          archived: false
+        }
+      ]
+    },
+    {
+      id: 'cust_avery',
+      firstName: 'Avery',
+      lastName: 'Clark',
+      email: 'avery.clark@example.com',
+      phone: '555-8821',
+      notes: '',
+      pets: [
+        {
+          id: 'pet_luna',
+          name: 'Luna',
+          species: 'dog',
+          breed: 'Aussie Mix',
+          photoUrl: 'https://placehold.co/96x96/e0e7ff/3730a3?text=Luna',
+          archived: false
+        }
+      ]
+    }
+  ];
+}
+
+function loadCustomers() {
+  const raw = localStorage.getItem(CUSTOMERS_KEY);
+  if (!raw) {
+    return getDefaultCustomers();
+  }
+
+  try {
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : getDefaultCustomers();
+  } catch {
+    return getDefaultCustomers();
+  }
+}
+
+function saveCustomers() {
+  localStorage.setItem(CUSTOMERS_KEY, JSON.stringify(customersData));
+}
+
+let customersData = loadCustomers();
+let activeCustomerId = customersData[0]?.id || null;
+let activePetId = null;
+
 function requireSession() {
   const raw = sessionStorage.getItem(SESSION_KEY);
   if (!raw) {
@@ -95,6 +169,149 @@ function renderList(containerId, items, formatter) {
     row.className = 'list-item';
     row.innerHTML = formatter(item);
     container.appendChild(row);
+  }
+}
+
+function getActiveCustomer() {
+  return customersData.find((customer) => customer.id === activeCustomerId) || null;
+}
+
+function setPetPreview(url) {
+  document.getElementById('pet-photo-preview').src = getPetPhotoUrl(url);
+}
+
+function resetCustomerForm() {
+  const form = document.getElementById('customer-form');
+  form.customerId.value = '';
+  form.firstName.value = '';
+  form.lastName.value = '';
+  form.email.value = '';
+  form.phone.value = '';
+  form.notes.value = '';
+}
+
+function resetPetForm() {
+  const form = document.getElementById('pet-form');
+  form.petId.value = '';
+  form.name.value = '';
+  form.species.value = 'dog';
+  form.breed.value = '';
+  form.photoUrl.value = '';
+  form.archived.checked = false;
+  activePetId = null;
+  setPetPreview('');
+}
+
+function fillCustomerForm(customer) {
+  const form = document.getElementById('customer-form');
+  form.customerId.value = customer.id;
+  form.firstName.value = customer.firstName;
+  form.lastName.value = customer.lastName;
+  form.email.value = customer.email || '';
+  form.phone.value = customer.phone || '';
+  form.notes.value = customer.notes || '';
+}
+
+function fillPetForm(pet) {
+  const form = document.getElementById('pet-form');
+  form.petId.value = pet.id;
+  form.name.value = pet.name;
+  form.species.value = pet.species || 'dog';
+  form.breed.value = pet.breed || '';
+  form.photoUrl.value = pet.photoUrl || '';
+  form.archived.checked = Boolean(pet.archived);
+  activePetId = pet.id;
+  setPetPreview(pet.photoUrl || '');
+}
+
+function renderCustomerModule() {
+  const customerList = document.getElementById('customer-record-list');
+  customerList.innerHTML = '';
+
+  if (customersData.length === 0) {
+    customerList.innerHTML = '<div class="record-card">No customers yet. Add one to get started.</div>';
+  }
+
+  for (const customer of customersData) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = `record-button ${customer.id === activeCustomerId ? 'active' : ''}`;
+
+    const petCount = customer.pets.filter((pet) => !pet.archived).length;
+    button.innerHTML = `
+      <div class="record-title">${customer.firstName} ${customer.lastName}</div>
+      <div class="record-sub">${customer.phone || 'No phone'} • ${petCount} active pet${petCount === 1 ? '' : 's'}</div>
+    `;
+
+    button.addEventListener('click', () => {
+      activeCustomerId = customer.id;
+      activePetId = null;
+      fillCustomerForm(customer);
+      resetPetForm();
+      renderCustomerModule();
+    });
+
+    customerList.appendChild(button);
+  }
+
+  const activeCustomer = getActiveCustomer();
+  const label = document.getElementById('active-customer-label');
+  const petList = document.getElementById('pet-record-list');
+  petList.innerHTML = '';
+
+  if (!activeCustomer) {
+    label.textContent = 'Select or create a customer first.';
+    return;
+  }
+
+  label.textContent = `${activeCustomer.firstName} ${activeCustomer.lastName}`;
+
+  for (const pet of activeCustomer.pets) {
+    const row = document.createElement('div');
+    row.className = 'record-card pet-row';
+
+    row.innerHTML = `
+      <img src="${getPetPhotoUrl(pet.photoUrl)}" alt="${pet.name}" />
+      <div>
+        <div class="record-title">${pet.name} ${pet.archived ? '<span class="badge archived">Archived</span>' : ''}</div>
+        <div class="record-sub">${pet.species || 'dog'} • ${pet.breed || 'Breed not set'}</div>
+      </div>
+      <div class="pet-actions">
+        <button class="btn btn-outline" type="button" data-action="edit-pet" data-pet-id="${pet.id}">Edit</button>
+        <button class="btn btn-outline" type="button" data-action="archive-pet" data-pet-id="${pet.id}">${pet.archived ? 'Unarchive' : 'Archive'}</button>
+      </div>
+    `;
+
+    petList.appendChild(row);
+  }
+
+  if (activeCustomer.pets.length === 0) {
+    petList.innerHTML = '<div class="record-card">No pets yet. Click + New Pet.</div>';
+  }
+
+  for (const button of petList.querySelectorAll('[data-action="edit-pet"]')) {
+    button.addEventListener('click', () => {
+      const petId = button.getAttribute('data-pet-id');
+      const pet = activeCustomer.pets.find((entry) => entry.id === petId);
+      if (pet) {
+        fillPetForm(pet);
+      }
+    });
+  }
+
+  for (const button of petList.querySelectorAll('[data-action="archive-pet"]')) {
+    button.addEventListener('click', () => {
+      const petId = button.getAttribute('data-pet-id');
+      const pet = activeCustomer.pets.find((entry) => entry.id === petId);
+      if (!pet) {
+        return;
+      }
+
+      pet.archived = !pet.archived;
+      saveCustomers();
+      document.getElementById('pet-output').textContent = `${pet.name} ${pet.archived ? 'archived' : 'unarchived'}.`;
+      renderCustomerModule();
+    });
   }
 }
 
@@ -186,11 +403,6 @@ function setupDashboard(session) {
     <div class="inline"><span>${item.stay}</span></div>
   `);
 
-  renderList('customer-list', customerItems, (item) => `
-    <strong>${item.customer}</strong>
-    <div class="inline"><span>Pets: ${item.pets}</span><span>${item.phone}</span></div>
-  `);
-
   renderList('daycare-tab-list', daycareGroups, (item) => `
     <strong>${item.group}</strong>
     <div class="inline"><span>${item.dogs} dogs</span><span>Lead: ${item.lead}</span></div>
@@ -219,6 +431,14 @@ function setupDashboard(session) {
   `);
 
   applySettingsToForm(loadSettings());
+  const activeCustomer = getActiveCustomer();
+  if (activeCustomer) {
+    fillCustomerForm(activeCustomer);
+  } else {
+    resetCustomerForm();
+  }
+  resetPetForm();
+  renderCustomerModule();
 }
 
 const session = requireSession();
@@ -266,4 +486,109 @@ document.getElementById('settings-form').addEventListener('submit', (event) => {
 
   localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
   document.getElementById('settings-output').textContent = 'Settings saved locally for this browser session.';
+});
+
+document.getElementById('new-customer-btn').addEventListener('click', () => {
+  activeCustomerId = null;
+  activePetId = null;
+  resetCustomerForm();
+  resetPetForm();
+  document.getElementById('customer-output').textContent = 'Creating a new customer.';
+  renderCustomerModule();
+});
+
+document.getElementById('customer-form').addEventListener('submit', (event) => {
+  event.preventDefault();
+  const form = event.currentTarget;
+
+  const payload = {
+    firstName: form.firstName.value.trim(),
+    lastName: form.lastName.value.trim(),
+    email: form.email.value.trim(),
+    phone: form.phone.value.trim(),
+    notes: form.notes.value.trim()
+  };
+
+  if (!payload.firstName || !payload.lastName) {
+    document.getElementById('customer-output').textContent = 'First and last name are required.';
+    return;
+  }
+
+  const existingId = form.customerId.value;
+  if (existingId) {
+    const existing = customersData.find((customer) => customer.id === existingId);
+    if (existing) {
+      Object.assign(existing, payload);
+      activeCustomerId = existing.id;
+      document.getElementById('customer-output').textContent = 'Customer updated.';
+    }
+  } else {
+    const customer = {
+      id: makeId('cust'),
+      ...payload,
+      pets: []
+    };
+    customersData.unshift(customer);
+    activeCustomerId = customer.id;
+    form.customerId.value = customer.id;
+    document.getElementById('customer-output').textContent = 'Customer added.';
+  }
+
+  saveCustomers();
+  renderCustomerModule();
+});
+
+document.getElementById('new-pet-btn').addEventListener('click', () => {
+  const activeCustomer = getActiveCustomer();
+  if (!activeCustomer) {
+    document.getElementById('pet-output').textContent = 'Save a customer first, then add pets.';
+    return;
+  }
+
+  resetPetForm();
+  document.getElementById('pet-output').textContent = `Adding new pet for ${activeCustomer.firstName} ${activeCustomer.lastName}.`;
+});
+
+document.getElementById('pet-form').addEventListener('submit', (event) => {
+  event.preventDefault();
+
+  const activeCustomer = getActiveCustomer();
+  if (!activeCustomer) {
+    document.getElementById('pet-output').textContent = 'Save a customer before adding pets.';
+    return;
+  }
+
+  const form = event.currentTarget;
+  const petPayload = {
+    name: form.name.value.trim(),
+    species: form.species.value.trim() || 'dog',
+    breed: form.breed.value.trim(),
+    photoUrl: form.photoUrl.value.trim(),
+    archived: Boolean(form.archived.checked)
+  };
+
+  if (!petPayload.name) {
+    document.getElementById('pet-output').textContent = 'Pet name is required.';
+    return;
+  }
+
+  const existingPetId = form.petId.value;
+  if (existingPetId) {
+    const pet = activeCustomer.pets.find((entry) => entry.id === existingPetId);
+    if (pet) {
+      Object.assign(pet, petPayload);
+      document.getElementById('pet-output').textContent = 'Pet updated.';
+    }
+  } else {
+    activeCustomer.pets.push({ id: makeId('pet'), ...petPayload });
+    document.getElementById('pet-output').textContent = 'Pet added.';
+  }
+
+  saveCustomers();
+  resetPetForm();
+  renderCustomerModule();
+});
+
+document.getElementById('pet-form').photoUrl.addEventListener('input', (event) => {
+  setPetPreview(event.target.value);
 });

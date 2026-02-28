@@ -268,6 +268,12 @@ pre {
   gap: 0.8rem;
 }
 
+.customer-module {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: 0.8rem;
+}
+
 .panel {
   padding: 1rem;
 }
@@ -276,9 +282,67 @@ pre {
   margin-bottom: 0.75rem;
 }
 
+.panel-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 0.8rem;
+}
+
+.panel-head .muted {
+  margin: 0.2rem 0 0;
+}
+
+.pets-head {
+  margin-top: 1rem;
+}
+
 .list {
   display: grid;
   gap: 0.55rem;
+}
+
+.record-list {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.record-card {
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 0.65rem;
+  background: #fff;
+}
+
+.record-button {
+  width: 100%;
+  text-align: left;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 0.7rem;
+  background: #fff;
+  cursor: pointer;
+}
+
+.record-button.active {
+  border-color: #3b82f6;
+  background: #eff6ff;
+}
+
+.record-title {
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.record-sub {
+  margin-top: 0.2rem;
+  color: #64748b;
+  font-size: 0.88rem;
+}
+
+.compact-form {
+  max-width: none;
 }
 
 .list-item {
@@ -311,6 +375,78 @@ pre {
   font-size: 0.92rem;
 }
 
+.pet-record-list {
+  margin-top: 0.9rem;
+}
+
+.pet-row {
+  display: grid;
+  grid-template-columns: 56px 1fr auto;
+  gap: 0.65rem;
+  align-items: center;
+}
+
+.pet-row img {
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+  background: #f1f5f9;
+}
+
+.pet-actions {
+  display: flex;
+  gap: 0.45rem;
+}
+
+.pet-actions .btn {
+  padding: 0.45rem 0.6rem;
+  font-size: 0.82rem;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 0.15rem 0.5rem;
+  background: #e2e8f0;
+  color: #334155;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.badge.archived {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.pet-photo-row {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.pet-photo-row img {
+  width: 72px;
+  height: 72px;
+  border-radius: 10px;
+  object-fit: cover;
+  border: 1px solid #cbd5e1;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-weight: 600;
+  color: #334155;
+}
+
+.checkbox-label input {
+  width: auto;
+}
+
 .settings-form {
   margin-top: 0.9rem;
   display: grid;
@@ -337,5 +473,14 @@ pre {
 
   .dashboard-grid {
     grid-template-columns: 1fr;
+  }
+
+  .customer-module {
+    grid-template-columns: 1fr;
+  }
+
+  .panel-head {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }

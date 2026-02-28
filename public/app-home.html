@@ -105,11 +105,77 @@
         </section>
 
         <section class="tab-panel" data-panel="customers">
-          <article class="card panel">
-            <h3>Customers & Pets</h3>
-            <p class="muted">Recent customer accounts and pet profiles.</p>
-            <div id="customer-list" class="list"></div>
-          </article>
+          <section class="customer-module">
+            <article class="card panel">
+              <div class="panel-head">
+                <div>
+                  <h3>Customers</h3>
+                  <p class="muted">Select a customer to edit details and manage pets.</p>
+                </div>
+                <button id="new-customer-btn" class="btn btn-outline" type="button">+ New Customer</button>
+              </div>
+              <div id="customer-record-list" class="record-list"></div>
+            </article>
+
+            <article class="card panel">
+              <h3>Customer Details</h3>
+              <form id="customer-form" class="settings-form compact-form">
+                <input type="hidden" name="customerId" />
+                <label>First Name
+                  <input name="firstName" required />
+                </label>
+                <label>Last Name
+                  <input name="lastName" required />
+                </label>
+                <label>Email
+                  <input name="email" type="email" />
+                </label>
+                <label>Phone
+                  <input name="phone" />
+                </label>
+                <label>Notes
+                  <input name="notes" />
+                </label>
+                <button class="btn btn-primary" type="submit">Save Customer</button>
+              </form>
+              <div id="customer-output" class="inline-notice"></div>
+
+              <div class="panel-head pets-head">
+                <div>
+                  <h3>Pets</h3>
+                  <p class="muted" id="active-customer-label">Select or create a customer first.</p>
+                </div>
+                <button id="new-pet-btn" class="btn btn-outline" type="button">+ New Pet</button>
+              </div>
+
+              <form id="pet-form" class="settings-form compact-form">
+                <input type="hidden" name="petId" />
+                <label>Pet Name
+                  <input name="name" required />
+                </label>
+                <label>Species
+                  <input name="species" value="dog" required />
+                </label>
+                <label>Breed
+                  <input name="breed" />
+                </label>
+                <label>Profile Photo URL
+                  <input name="photoUrl" type="url" placeholder="https://..." />
+                </label>
+                <div class="pet-photo-row">
+                  <img id="pet-photo-preview" src="https://placehold.co/96x96/e2e8f0/475569?text=PET" alt="Pet profile preview" />
+                  <label class="checkbox-label">
+                    <input name="archived" type="checkbox" />
+                    Archived
+                  </label>
+                </div>
+                <button class="btn btn-primary" type="submit">Save Pet</button>
+              </form>
+
+              <div id="pet-record-list" class="record-list pet-record-list"></div>
+              <div id="pet-output" class="inline-notice"></div>
+            </article>
+          </section>
         </section>
 
         <section class="tab-panel" data-panel="daycare">
