@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MILO | Staff Operations</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header>
+      <h1>MILO Staff Console</h1>
+      <p>Boarding, daycare, grooming, and retail operations in one system.</p>
+    </header>
+
+    <main>
+      <section class="card">
+        <h2>Login</h2>
+        <form id="login-form">
+          <label>Email <input name="email" type="email" value="admin@milo.local" required /></label>
+          <label>Password <input name="password" type="password" value="ChangeMe123!" required /></label>
+          <button type="submit">Sign In</button>
+        </form>
+        <p class="hint">Demo admin credentials are prefilled.</p>
+        <pre id="auth-output"></pre>
+      </section>
+
+      <section class="card grid-2">
+        <div>
+          <h2>Facility & Calendar</h2>
+          <button id="load-facility">Load Facility</button>
+          <button id="check-availability">Check Next 7 Days</button>
+          <pre id="facility-output"></pre>
+        </div>
+        <div>
+          <h2>Boarding Quote</h2>
+          <button id="quote-night">Quote By Night</button>
+          <button id="quote-day">Quote By Day</button>
+          <pre id="quote-output"></pre>
+        </div>
+      </section>
+
+      <section class="card grid-2">
+        <div>
+          <h2>Employees</h2>
+          <button id="list-employees">List Employees</button>
+          <pre id="employees-output"></pre>
+        </div>
+        <div>
+          <h2>Inventory</h2>
+          <button id="list-inventory">List Items</button>
+          <pre id="inventory-output"></pre>
+        </div>
+      </section>
+
+      <section class="card grid-2">
+        <div>
+          <h2>Grooming</h2>
+          <button id="list-grooming">List Grooming Appointments</button>
+          <pre id="grooming-output"></pre>
+        </div>
+        <div>
+          <h2>Billing</h2>
+          <button id="list-invoices">List Invoices</button>
+          <pre id="billing-output"></pre>
+        </div>
+      </section>
+    </main>
+
+    <script src="/main.js"></script>
+  </body>
+</html>

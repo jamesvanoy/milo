@@ -39,8 +39,10 @@ See:
 
 ## Customer booking portal
 
+- Public homepage: `https://milo-production-aac7.up.railway.app/`
 - Hosted portal URL: `https://milo-production-aac7.up.railway.app/portal.html`
 - Customers can create their own account, add pets, quote services, and submit reservations.
+- Staff console: `https://milo-production-aac7.up.railway.app/app.html`
 
 Embed this portal on your public website:
 

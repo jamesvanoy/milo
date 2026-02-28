@@ -3,69 +3,118 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MILO | Pet Care Operations</title>
-    <link rel="stylesheet" href="/styles.css" />
+    <title>MILO | Dog Boarding, Daycare, and Grooming</title>
+    <meta name="description" content="Modern pet care services with online booking, customer login, and transparent pricing." />
+    <link rel="stylesheet" href="/home.css" />
   </head>
   <body>
-    <header>
-      <h1>MILO</h1>
-      <p>Boarding, daycare, grooming, and retail operations in one system.</p>
+    <header class="site-header">
+      <div class="container nav">
+        <div class="brand">MILO</div>
+        <nav class="nav-links">
+          <a class="button ghost" data-scroll href="#pricing">Pricing</a>
+          <a class="button ghost" href="/portal.html">Customer Login</a>
+          <a class="button primary" href="/portal.html">Book Now</a>
+        </nav>
+      </div>
     </header>
 
-    <main>
-      <section class="card">
-        <h2>Login</h2>
-        <form id="login-form">
-          <label>Email <input name="email" type="email" value="admin@milo.local" required /></label>
-          <label>Password <input name="password" type="password" value="ChangeMe123!" required /></label>
-          <button type="submit">Sign In</button>
-        </form>
-        <p class="hint">Demo admin credentials are prefilled.</p>
-        <pre id="auth-output"></pre>
+    <main class="container">
+      <section class="hero">
+        <article class="card">
+          <h1>Trusted care for your dog, every day and every stay.</h1>
+          <p>
+            MILO makes it simple to schedule boarding, daycare, and grooming online.
+            Create your account, add your pets, and request reservations in minutes.
+          </p>
+          <div class="pill-row">
+            <span class="pill">Online Booking</span>
+            <span class="pill">Customer Login</span>
+            <span class="pill">Secure Pet Profiles</span>
+            <span class="pill">Fast Check-In</span>
+          </div>
+          <div class="cta-row">
+            <a class="button primary" href="/portal.html">Create Account</a>
+            <a class="button secondary" href="/portal.html">Customer Login</a>
+          </div>
+        </article>
+
+        <aside class="card">
+          <h2>Why pet parents choose us</h2>
+          <ul class="list">
+            <li>Dedicated, trained team for safe socialization and supervised play</li>
+            <li>Clean, climate-controlled boarding with flexible pickup options</li>
+            <li>Convenient grooming add-ons during daycare or boarding stays</li>
+            <li>Transparent pricing before you submit any booking request</li>
+          </ul>
+          <div class="cta-row">
+            <a class="button ghost" data-scroll href="#pricing">View Pricing</a>
+            <a class="button ghost" href="/app.html">Staff Login</a>
+          </div>
+        </aside>
       </section>
 
-      <section class="card grid-2">
-        <div>
-          <h2>Facility & Calendar</h2>
-          <button id="load-facility">Load Facility</button>
-          <button id="check-availability">Check Next 7 Days</button>
-          <pre id="facility-output"></pre>
-        </div>
-        <div>
-          <h2>Boarding Quote</h2>
-          <button id="quote-night">Quote By Night</button>
-          <button id="quote-day">Quote By Day</button>
-          <pre id="quote-output"></pre>
+      <section id="pricing" class="section">
+        <h2>Simple pricing</h2>
+        <p>Final totals include applicable tax and are confirmed at booking.</p>
+        <div class="grid-3">
+          <article class="card">
+            <h3>Boarding</h3>
+            <p class="price">$58 <small>/ night</small></p>
+            <ul class="list">
+              <li>Comfortable overnight accommodations</li>
+              <li>Daily wellness and behavior notes</li>
+              <li>Optional grooming add-ons</li>
+            </ul>
+            <div class="cta-row">
+              <a class="button primary" href="/portal.html">Book Boarding</a>
+            </div>
+          </article>
+
+          <article class="card">
+            <h3>Daycare</h3>
+            <p class="price">$34 <small>/ day</small></p>
+            <ul class="list">
+              <li>Structured play groups</li>
+              <li>Supervised activity and rest cycles</li>
+              <li>Ideal for social dogs</li>
+            </ul>
+            <div class="cta-row">
+              <a class="button primary" href="/portal.html">Book Daycare</a>
+            </div>
+          </article>
+
+          <article class="card">
+            <h3>Grooming</h3>
+            <p class="price">From $45 <small>/ service</small></p>
+            <ul class="list">
+              <li>Bath, brush, nail and ear care</li>
+              <li>Breed-specific grooming options</li>
+              <li>Bundle with boarding or daycare</li>
+            </ul>
+            <div class="cta-row">
+              <a class="button primary" href="/portal.html">Request Grooming</a>
+            </div>
+          </article>
         </div>
       </section>
 
-      <section class="card grid-2">
-        <div>
-          <h2>Employees</h2>
-          <button id="list-employees">List Employees</button>
-          <pre id="employees-output"></pre>
-        </div>
-        <div>
-          <h2>Inventory</h2>
-          <button id="list-inventory">List Items</button>
-          <pre id="inventory-output"></pre>
-        </div>
+      <section class="section">
+        <article class="card">
+          <h2>Ready to get started?</h2>
+          <p>Create your customer profile once, then manage pets and future bookings from the portal.</p>
+          <div class="cta-row">
+            <a class="button primary" href="/portal.html">Sign Up</a>
+            <a class="button secondary" href="/portal.html">Customer Login</a>
+          </div>
+        </article>
       </section>
 
-      <section class="card grid-2">
-        <div>
-          <h2>Grooming</h2>
-          <button id="list-grooming">List Grooming Appointments</button>
-          <pre id="grooming-output"></pre>
-        </div>
-        <div>
-          <h2>Billing</h2>
-          <button id="list-invoices">List Invoices</button>
-          <pre id="billing-output"></pre>
-        </div>
-      </section>
+      <footer class="footer">
+        <p>MILO • Boarding • Daycare • Grooming</p>
+      </footer>
     </main>
 
-    <script src="/main.js"></script>
+    <script src="/home.js"></script>
   </body>
 </html>
