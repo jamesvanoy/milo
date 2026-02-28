@@ -3,64 +3,72 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MILO | Staff Operations</title>
+    <title>MILO | Staff App</title>
     <link rel="stylesheet" href="/styles.css" />
   </head>
-  <body>
-    <header>
-      <h1>MILO Staff Console</h1>
-      <p>Boarding, daycare, grooming, and retail operations in one system.</p>
+  <body class="page-shell">
+    <header class="topbar">
+      <div class="topbar-inner">
+        <div>
+          <h1>MILO Staff App</h1>
+          <p>Operations workspace for facility, scheduling, team, and billing.</p>
+        </div>
+        <div class="inline-actions">
+          <a class="btn btn-outline" href="/">Public Site</a>
+          <a class="btn btn-outline" href="/portal.html">Customer Portal</a>
+        </div>
+      </div>
     </header>
 
-    <main>
+    <main class="layout">
       <section class="card">
-        <h2>Login</h2>
+        <h2>Staff Sign-In</h2>
         <form id="login-form">
           <label>Email <input name="email" type="email" value="admin@milo.local" required /></label>
           <label>Password <input name="password" type="password" value="ChangeMe123!" required /></label>
-          <button type="submit">Sign In</button>
+          <button class="btn btn-primary" type="submit">Sign In</button>
         </form>
-        <p class="hint">Demo admin credentials are prefilled.</p>
+        <p class="hint">Use staff credentials. Demo credentials are prefilled for development.</p>
         <pre id="auth-output"></pre>
       </section>
 
-      <section class="card grid-2">
+      <section class="card grid-2 restricted" data-requires-auth>
         <div>
-          <h2>Facility & Calendar</h2>
-          <button id="load-facility">Load Facility</button>
-          <button id="check-availability">Check Next 7 Days</button>
+          <h2>Facility & Occupancy</h2>
+          <button class="btn btn-outline" id="load-facility">Load Facility</button>
+          <button class="btn btn-outline" id="check-availability">Check Next 7 Days</button>
           <pre id="facility-output"></pre>
         </div>
         <div>
-          <h2>Boarding Quote</h2>
-          <button id="quote-night">Quote By Night</button>
-          <button id="quote-day">Quote By Day</button>
+          <h2>Service Pricing Preview</h2>
+          <button class="btn btn-outline" id="quote-night">Quote Boarding (Night)</button>
+          <button class="btn btn-outline" id="quote-day">Quote Daycare (Day)</button>
           <pre id="quote-output"></pre>
         </div>
       </section>
 
-      <section class="card grid-2">
+      <section class="card grid-2 restricted" data-requires-auth>
         <div>
           <h2>Employees</h2>
-          <button id="list-employees">List Employees</button>
+          <button class="btn btn-outline" id="list-employees">Load Employees</button>
           <pre id="employees-output"></pre>
         </div>
         <div>
           <h2>Inventory</h2>
-          <button id="list-inventory">List Items</button>
+          <button class="btn btn-outline" id="list-inventory">Load Items</button>
           <pre id="inventory-output"></pre>
         </div>
       </section>
 
-      <section class="card grid-2">
+      <section class="card grid-2 restricted" data-requires-auth>
         <div>
-          <h2>Grooming</h2>
-          <button id="list-grooming">List Grooming Appointments</button>
+          <h2>Grooming Queue</h2>
+          <button class="btn btn-outline" id="list-grooming">Load Appointments</button>
           <pre id="grooming-output"></pre>
         </div>
         <div>
           <h2>Billing</h2>
-          <button id="list-invoices">List Invoices</button>
+          <button class="btn btn-outline" id="list-invoices">Load Invoices</button>
           <pre id="billing-output"></pre>
         </div>
       </section>

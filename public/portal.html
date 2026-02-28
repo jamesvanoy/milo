@@ -3,61 +3,74 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MILO Customer Portal</title>
+    <title>MILO | Customer Portal</title>
     <link rel="stylesheet" href="/styles.css" />
   </head>
-  <body>
-    <header>
-      <h1>MILO Customer Portal</h1>
-      <p id="facility-name">Loading facility...</p>
+  <body class="page-shell">
+    <header class="topbar">
+      <div class="topbar-inner">
+        <div>
+          <h1>MILO Customer Portal</h1>
+          <p id="facility-name">Loading facility...</p>
+        </div>
+        <div class="inline-actions">
+          <a class="btn btn-outline" href="/">Home</a>
+          <a class="btn btn-outline" href="/app.html">Staff App</a>
+        </div>
+      </div>
     </header>
 
-    <main>
-      <section class="card grid-2">
-        <div>
-          <h2>Step 1: Request Account</h2>
+    <main class="layout">
+      <section class="card">
+        <h2>Get Access</h2>
+        <p class="hint">Accounts are created after email verification and password setup.</p>
+        <div class="grid-2">
+          <div>
+            <h3>Step 1: Request verification</h3>
           <form id="register-request-form">
             <label>First name <input name="firstName" required /></label>
             <label>Last name <input name="lastName" required /></label>
             <label>Email <input name="email" type="email" required /></label>
             <label>Phone <input name="phone" /></label>
-            <button type="submit">Send Confirmation Email</button>
+            <button class="btn btn-primary" type="submit">Send Confirmation Email</button>
           </form>
-          <p class="hint">We will send a confirmation link before the account is created.</p>
           <pre id="register-output"></pre>
+          </div>
 
-          <h2>Step 2: Confirm + Create Password</h2>
+          <div>
+            <h3>Step 2: Create password</h3>
           <form id="register-complete-form">
             <label>Confirmation token <input name="token" id="verify-token" required /></label>
             <label>Create password <input name="password" type="password" minlength="8" required /></label>
-            <button type="submit">Create My Account</button>
+            <button class="btn btn-primary" type="submit">Create My Account</button>
           </form>
-        </div>
-        <div>
-          <h2>Customer Login</h2>
+            <h3>Already have an account?</h3>
           <form id="login-form">
             <label>Email <input name="email" type="email" required /></label>
             <label>Password <input name="password" type="password" required /></label>
-            <button type="submit">Sign In</button>
+            <button class="btn btn-primary" type="submit">Sign In</button>
           </form>
           <pre id="auth-output"></pre>
+          </div>
         </div>
       </section>
 
-      <section class="card grid-2">
+      <section class="card restricted" data-requires-auth>
+        <h2>Pet Profiles</h2>
+        <p class="hint">Add each pet once, then reuse profiles for all future reservations.</p>
+        <div class="grid-2">
         <div>
-          <h2>Add Pet</h2>
           <form id="pet-form">
             <label>Pet name <input name="name" required /></label>
             <label>Breed <input name="breed" /></label>
             <label>Weight (lbs) <input name="weightLbs" type="number" min="0" step="0.1" /></label>
-            <button type="submit">Save Pet</button>
+            <button class="btn btn-primary" type="submit">Save Pet</button>
           </form>
-          <button id="load-pets">Load My Pets</button>
+          <button class="btn btn-outline" id="load-pets">Load My Pets</button>
           <pre id="pets-output"></pre>
         </div>
         <div>
-          <h2>Booking Quote</h2>
+          <h3>Pricing Preview</h3>
           <form id="quote-form">
             <label>Service
               <select name="serviceType">
@@ -74,14 +87,15 @@
             <label>Check-in <input name="checkInAt" type="datetime-local" required /></label>
             <label>Check-out <input name="checkOutAt" type="datetime-local" required /></label>
             <label>Kennels required <input name="kennelsRequired" type="number" min="1" value="1" required /></label>
-            <button type="submit">Get Quote</button>
+            <button class="btn btn-primary" type="submit">Get Quote</button>
           </form>
           <pre id="quote-output"></pre>
         </div>
+        </div>
       </section>
 
-      <section class="card">
-        <h2>Create Reservation</h2>
+      <section class="card restricted" data-requires-auth>
+        <h2>Reservation Requests</h2>
         <form id="reservation-form">
           <label>Pet
             <select name="petId" id="reservation-pet" required></select>
@@ -101,9 +115,9 @@
           <label>Check-in <input name="checkInAt" type="datetime-local" required /></label>
           <label>Check-out <input name="checkOutAt" type="datetime-local" required /></label>
           <label>Notes <input name="notes" /></label>
-          <button type="submit">Submit Reservation</button>
+          <button class="btn btn-primary" type="submit">Submit Reservation Request</button>
         </form>
-        <button id="load-reservations">Load My Reservations</button>
+        <button class="btn btn-outline" id="load-reservations">Load My Reservations</button>
         <pre id="reservation-output"></pre>
       </section>
     </main>

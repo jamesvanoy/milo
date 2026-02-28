@@ -1,5 +1,17 @@
 let token = null;
 
+const restrictedSections = Array.from(document.querySelectorAll('[data-requires-auth]'));
+
+function setLockedState(locked) {
+  for (const section of restrictedSections) {
+    section.classList.toggle('locked', locked);
+    const controls = section.querySelectorAll('button, input, select, textarea');
+    for (const control of controls) {
+      control.disabled = locked;
+    }
+  }
+}
+
 async function api(path, options = {}) {
   const response = await fetch(path, {
     ...options,
@@ -22,6 +34,9 @@ function write(id, value) {
   document.getElementById(id).textContent = JSON.stringify(value, null, 2);
 }
 
+setLockedState(true);
+write('auth-output', { message: 'Please sign in to load operational data.' });
+
 document.getElementById('login-form').addEventListener('submit', async (event) => {
   event.preventDefault();
 
@@ -36,8 +51,10 @@ document.getElementById('login-form').addEventListener('submit', async (event) =
     });
 
     token = result.token;
+    setLockedState(false);
     write('auth-output', result);
   } catch (error) {
+    setLockedState(true);
     write('auth-output', { error: error.message });
   }
 });

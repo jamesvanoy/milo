@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MILO | Dog Boarding, Daycare, and Grooming</title>
-    <meta name="description" content="Modern pet care services with online booking, customer login, and transparent pricing." />
+    <title>MILO | Boarding, Daycare & Grooming</title>
+    <meta name="description" content="A welcoming home for dog boarding, daycare, and grooming with secure customer and staff access." />
     <link rel="stylesheet" href="/home.css" />
   </head>
   <body>
@@ -12,9 +12,10 @@
       <div class="container nav">
         <div class="brand">MILO</div>
         <nav class="nav-links">
+          <a class="button ghost" data-scroll href="#services">Services</a>
           <a class="button ghost" data-scroll href="#pricing">Pricing</a>
           <a class="button ghost" href="/portal.html">Customer Login</a>
-          <a class="button primary" href="/portal.html">Book Now</a>
+          <a class="button primary" href="/portal.html">Customer Portal</a>
         </nav>
       </div>
     </header>
@@ -22,79 +23,79 @@
     <main class="container">
       <section class="hero">
         <article class="card">
-          <h1>Trusted care for your dog, every day and every stay.</h1>
+          <p class="eyebrow">Welcome to MILO</p>
+          <h1>A calmer, safer, happier place for your dog.</h1>
           <p>
-            MILO makes it simple to schedule boarding, daycare, and grooming online.
-            Create your account, add your pets, and request reservations in minutes.
+            We provide premium boarding, active daycare, and professional grooming.
+            Customers and staff use secure portal access for account and reservation management.
           </p>
           <div class="pill-row">
-            <span class="pill">Online Booking</span>
+            <span class="pill">Comfort-First Boarding</span>
+            <span class="pill">Structured Daycare</span>
+            <span class="pill">Grooming Services</span>
             <span class="pill">Customer Login</span>
             <span class="pill">Secure Pet Profiles</span>
-            <span class="pill">Fast Check-In</span>
           </div>
           <div class="cta-row">
-            <a class="button primary" href="/portal.html">Create Account</a>
-            <a class="button secondary" href="/portal.html">Customer Login</a>
+            <a class="button primary" href="/portal.html">Sign Up / Login</a>
+            <a class="button secondary" href="/app.html">Staff App</a>
           </div>
         </article>
 
         <aside class="card">
-          <h2>Why pet parents choose us</h2>
+          <h2>How reservations work</h2>
           <ul class="list">
-            <li>Dedicated, trained team for safe socialization and supervised play</li>
-            <li>Clean, climate-controlled boarding with flexible pickup options</li>
-            <li>Convenient grooming add-ons during daycare or boarding stays</li>
-            <li>Transparent pricing before you submit any booking request</li>
+            <li>Customers use a secure booking URL to request reservations</li>
+            <li>Employees can create and manage bookings inside the staff app</li>
+            <li>All bookings are tied to pet profiles and customer records</li>
+            <li>Pricing and taxes are calculated consistently in-app</li>
           </ul>
           <div class="cta-row">
-            <a class="button ghost" data-scroll href="#pricing">View Pricing</a>
-            <a class="button ghost" href="/app.html">Staff Login</a>
+            <a class="button ghost" href="/portal.html">Open Customer Portal</a>
+            <a class="button ghost" href="/app.html">Open Staff App</a>
           </div>
         </aside>
       </section>
 
+      <section id="services" class="section">
+        <h2>Services</h2>
+        <p>Designed for daily care, extended stays, and routine wellness grooming.</p>
+        <div class="grid-3">
+          <article class="card">
+            <h3>Boarding</h3>
+            <p>Overnight care with comfortable accommodations and attentive monitoring.</p>
+          </article>
+          <article class="card">
+            <h3>Daycare</h3>
+            <p>Supervised social play and structured rest for active, social dogs.</p>
+          </article>
+          <article class="card">
+            <h3>Grooming</h3>
+            <p>Bath, brush, nails, and breed-focused grooming delivered by trained staff.</p>
+          </article>
+        </div>
+      </section>
+
       <section id="pricing" class="section">
-        <h2>Simple pricing</h2>
-        <p>Final totals include applicable tax and are confirmed at booking.</p>
+        <h2>Transparent pricing</h2>
+        <p>Customers can review pricing and taxes in the portal before submitting requests.</p>
         <div class="grid-3">
           <article class="card">
             <h3>Boarding</h3>
             <p class="price">$58 <small>/ night</small></p>
-            <ul class="list">
-              <li>Comfortable overnight accommodations</li>
-              <li>Daily wellness and behavior notes</li>
-              <li>Optional grooming add-ons</li>
-            </ul>
-            <div class="cta-row">
-              <a class="button primary" href="/portal.html">Book Boarding</a>
-            </div>
+            <p>Per-night billing based on stay duration.</p>
           </article>
 
           <article class="card">
             <h3>Daycare</h3>
             <p class="price">$34 <small>/ day</small></p>
-            <ul class="list">
-              <li>Structured play groups</li>
-              <li>Supervised activity and rest cycles</li>
-              <li>Ideal for social dogs</li>
-            </ul>
-            <div class="cta-row">
-              <a class="button primary" href="/portal.html">Book Daycare</a>
-            </div>
+            <p>Per-day billing with configurable cutoff logic.</p>
           </article>
 
           <article class="card">
             <h3>Grooming</h3>
             <p class="price">From $45 <small>/ service</small></p>
-            <ul class="list">
-              <li>Bath, brush, nail and ear care</li>
-              <li>Breed-specific grooming options</li>
-              <li>Bundle with boarding or daycare</li>
-            </ul>
-            <div class="cta-row">
-              <a class="button primary" href="/portal.html">Request Grooming</a>
-            </div>
+            <p>Service pricing based on package and pet needs.</p>
           </article>
         </div>
       </section>
@@ -102,16 +103,19 @@
       <section class="section">
         <article class="card">
           <h2>Ready to get started?</h2>
-          <p>Create your customer profile once, then manage pets and future bookings from the portal.</p>
+          <p>
+            Use the customer portal URL for account access and reservation requests,
+            or log in to the staff app for internal booking operations.
+          </p>
           <div class="cta-row">
-            <a class="button primary" href="/portal.html">Sign Up</a>
-            <a class="button secondary" href="/portal.html">Customer Login</a>
+            <a class="button primary" href="/portal.html">Customer Portal</a>
+            <a class="button secondary" href="/app.html">Staff App</a>
           </div>
         </article>
       </section>
 
       <footer class="footer">
-        <p>MILO • Boarding • Daycare • Grooming</p>
+        <p>MILO • Boarding • Daycare • Grooming • Secure customer and staff access</p>
       </footer>
     </main>
 

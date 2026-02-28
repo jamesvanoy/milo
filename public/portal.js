@@ -2,6 +2,17 @@ let token = null;
 let pets = [];
 
 const params = new URLSearchParams(window.location.search);
+const restrictedSections = Array.from(document.querySelectorAll('[data-requires-auth]'));
+
+function setLockedState(locked) {
+  for (const section of restrictedSections) {
+    section.classList.toggle('locked', locked);
+    const controls = section.querySelectorAll('button, input, select, textarea');
+    for (const control of controls) {
+      control.disabled = locked;
+    }
+  }
+}
 
 function toIsoFromLocal(value) {
   const date = new Date(value);
@@ -65,6 +76,9 @@ initializePortal().catch((error) => {
   document.getElementById('facility-name').textContent = `Portal unavailable: ${error.message}`;
 });
 
+setLockedState(true);
+write('auth-output', { message: 'Sign in to manage pets and submit reservation requests.' });
+
 if (params.get('verifyToken')) {
   document.getElementById('verify-token').value = params.get('verifyToken');
 }
@@ -107,6 +121,7 @@ document.getElementById('register-complete-form').addEventListener('submit', asy
     });
 
     token = result.token;
+    setLockedState(false);
     write('auth-output', { message: 'Account verified and created', user: result.user, customer: result.customer });
     await refreshPets();
     await refreshReservations();
@@ -129,10 +144,12 @@ document.getElementById('login-form').addEventListener('submit', async (event) =
     });
 
     token = result.token;
+    setLockedState(false);
     write('auth-output', { message: 'Logged in', user: result.user, customer: result.customer });
     await refreshPets();
     await refreshReservations();
   } catch (error) {
+    setLockedState(true);
     write('auth-output', { error: error.message });
   }
 });
